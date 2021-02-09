@@ -59,7 +59,7 @@ publish-tag:
 
 # Push repo to github
 push-github:
-    stage: push
+    stage: publish
     before_script:
         - apt-get update -qq && apt-get install -y -qq git
         - mkdir ~/.ssh/
