@@ -55,3 +55,27 @@ publish-tag:
         - echo "Pushing dockerhub ${HUBTAG}";
         - docker tag $OWNER/${IMAGENAME}:latest ${HUBTAG};
         - docker push ${HUBTAG};
+
+
+# Push repo to github
+push-github:
+    stage: publish
+    before_script:
+        - apt-get update -qq && apt-get install -y -qq git
+        - mkdir ~/.ssh/
+        - cp $LABS_BOT_GH_KEY ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+        - echo -e "Host github.com\n\tStrictHostKeyChecking no\n\tHostname ssh.github.com\n\tPort 443\n\n" > ~/.ssh/config
+        - git config --global user.email "epi2melabs@nanoporetech.com"
+        - git config --global user.name "epi2melabs-bot"
+    script:
+        - git remote add ont ${CI_REPOSITORY_URL} || true
+        - git remote add github git@github.com:epi2me-labs/${CI_PROJECT_NAME}.git || true
+        - git fetch ont dev --tags
+        - git fetch ont master
+        - git fetch github master
+        - git checkout --track github/master || git checkout master
+        - git merge ${CI_COMMIT_REF_NAME}
+        - git push github master
+        - git push github ${CI_COMMIT_REF_NAME}
+    only:
+        - tags
