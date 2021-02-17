@@ -16,9 +16,9 @@ build-branch:
         - apk add make bash git openssl py3-virtualenv python3
     script:
         - echo "Logging in to internal gitlab container registry";
-        - echo ${CI_BUILD_TOKEN} | docker login --username gitlab-ci-token --password-stdin ${ONTREGISTRY};
+        - echo ${CI_BUILD_TOKEN} | docker login --username gitlab-ci-token --password-stdin ${CI_REGISTRY};
         - UPSTREAM=dev PYTHON=python3 make ${IMAGENAME};
-        - TAG=${ONTREGISTRY}/${CI_PROJECT_PATH}/${IMAGENAME}:${CI_COMMIT_REF_NAME};
+        - TAG=${CI_REGISTRY}/${CI_PROJECT_PATH}/${IMAGENAME}:${CI_COMMIT_REF_NAME};
         - echo "Pushing ${TAG}";
         - docker tag $OWNER/${IMAGENAME}:latest ${TAG};
         - docker push ${TAG};
@@ -60,6 +60,7 @@ publish-tag:
 # Push repo to github
 push-github:
     stage: publish
+    image: $GH_PUSH_IMAGE
     before_script:
         - apt-get update -qq && apt-get install -y -qq git
         - mkdir ~/.ssh/
