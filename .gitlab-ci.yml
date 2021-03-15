@@ -80,3 +80,28 @@ push-github:
         - git push github ${CI_COMMIT_REF_NAME}
     only:
         - tags
+
+# Rebuild notebooks and push to giithub blog
+rebuild-notebooks:
+    stage: publish
+    image: $GH_PUSH_IMAGE
+    before_script:
+        - apt-get update -qq && apt-get install -y -qq git python3-pip
+        - mkdir ~/.ssh/
+        - cp $LABS_BOT_GH_KEY ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+        - echo -e "Host github.com\n\tStrictHostKeyChecking no\n\tHostname ssh.github.com\n\tPort 443\n\n" > ~/.ssh/config
+        - git config --global user.email "epi2melabs@nanoporetech.com"
+        - git config --global user.name "epi2melabs-bot"
+        - pip3 install jupyterlab
+    script:
+        - cd ../
+        - jupyter nbconvert --to html tutorials/tutorials/*.ipynb
+        - git clone git@github.com:epi2me-labs/epi2me-labs.github.io.git
+        - cp tutorials/tutorials/*.html epi2me-labs.github.io/static/notebooks
+        - cd epi2me-labs.github.io
+        - git branch
+        - git add .
+        - git status
+        - echo `git commit -m "Rebuilt notebooks" && git push`
+    only:
+        - tags
