@@ -1,3 +1,7 @@
+include:
+    - project: "epi2melabs/ci-templates"
+      file: "push-github.yaml"
+
 variables:
       OWNER: ontresearch
       GIT_SUBMODULE_STRATEGY: recursive
@@ -6,7 +10,7 @@ image: ${IMAGE}
 
 stages:
     - build
-    - publish
+    - release
 
 build-branch:
     stage: build
@@ -36,8 +40,8 @@ build-branch:
           fi
         - echo "All done";
 
-publish-tag:
-    stage: publish
+release-tag:
+    stage: release
     only:
         - tags
     before_script:
@@ -58,32 +62,11 @@ publish-tag:
 
 
 # Push repo to github
-push-github:
-    stage: publish
-    image: $GH_PUSH_IMAGE
-    before_script:
-        - apt-get update -qq && apt-get install -y -qq git
-        - mkdir ~/.ssh/
-        - cp $LABS_BOT_GH_KEY ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
-        - echo -e "Host github.com\n\tStrictHostKeyChecking no\n\tHostname ssh.github.com\n\tPort 443\n\n" > ~/.ssh/config
-        - git config --global user.email "epi2melabs@nanoporetech.com"
-        - git config --global user.name "epi2melabs-bot"
-    script:
-        - git remote add ont ${CI_REPOSITORY_URL} || true
-        - git remote add github git@github.com:epi2me-labs/${CI_PROJECT_NAME}.git || true
-        - git fetch ont dev --tags
-        - git fetch ont master
-        - git fetch github master
-        - git checkout --track github/master || git checkout master
-        - git merge ${CI_COMMIT_REF_NAME}
-        - git push github master
-        - git push github ${CI_COMMIT_REF_NAME}
-    only:
-        - tags
+# push-github: - from template
 
 # Rebuild notebooks and push to giithub blog
 rebuild-notebooks:
-    stage: publish
+    stage: release
     image: $GH_PUSH_IMAGE
     before_script:
         - apt-get update -qq && apt-get install -y -qq git python3-pip
