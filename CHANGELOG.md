@@ -8,6 +8,11 @@ and this project adheres to Semantic Versioning.
 ### Fixed
 - Cas9 tutorial percentage of reads on target infographic updated
 ### Added
+- Added Zymo database
+### Changed
+- Changed sample file to small sample file
+
+### Added
 - Changelog file 
 
 
