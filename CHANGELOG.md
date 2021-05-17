@@ -4,16 +4,12 @@ The format is based on Keep a Changelog,
 and this project adheres to Semantic Versioning.
 
 
-## [Unreleased]
+## [v1.0.11]
 ### Fixed
 - Cas9 tutorial percentage of reads on target infographic updated
+
 ### Added
 - Added Zymo database
+
 ### Changed
 - Changed sample file to small sample file
-
-### Added
-- Changelog file 
-
-
-
