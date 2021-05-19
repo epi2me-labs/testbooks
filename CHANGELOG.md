@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 The format is based on Keep a Changelog,
 and this project adheres to Semantic Versioning.
 
+## [v1.0.12]
+### Changed
+- Accompanies nanolabs v0.4.1
+
 
 ## [v1.0.11]
 ### Fixed
