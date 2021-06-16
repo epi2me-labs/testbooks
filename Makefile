@@ -41,4 +41,6 @@ UPSTREAMTAG := dev
 .PHONY: epi2melabs-notebook
 epi2melabs-notebook:
 > echo "Using upstream ${OWNER}/${BASENAME} tag: $(UPSTREAM)"
+> docker pull $(OWNER)/$(BASENAME):$(UPSTREAM)
+> docker images
 > docker build --rm --force-rm --build-arg BASE_CONTAINER=$(OWNER)/$(BASENAME):$(UPSTREAM) -t $(OWNER)/$@:latest -f epi2melabs.dockerfile .
