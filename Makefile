@@ -34,9 +34,9 @@ echo_latest_upstream: venv/bin/activate
 > $(eval TAG=$(shell . venv/bin/activate; python dockerhub_tag.py $(OWNER)/$(BASENAME) --prefix v))
 > echo $(TAG)
 
-OWNER := ontresearch
-BASENAME := nanolabs-notebook
-UPSTREAMTAG := dev
+OWNER ?= ontresearch
+BASENAME ?= nanolabs-notebook
+UPSTREAM ?= dev
 
 .PHONY: epi2melabs-notebook
 epi2melabs-notebook:
